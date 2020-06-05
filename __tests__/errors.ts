@@ -1,6 +1,6 @@
 import { evaluate } from "../src";
 
-describe("evaluate", () => {
+describe("errors", () => {
   test.each([
     [
       "throws an error when there are two root nodes",
