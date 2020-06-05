@@ -14,8 +14,6 @@
   },
   "dependencies": {
     "acorn": "^7.2.0",
-    "espurify": "^2.0.1",
-    "estraverse": "^5.1.0",
     "prettier": "^2.0.5"
   },
   "devDependencies": {
