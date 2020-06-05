@@ -1,1 +1,1 @@
-declare module 'espurify';
+declare module "espurify";
