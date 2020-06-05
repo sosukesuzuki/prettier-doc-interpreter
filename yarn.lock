@@ -514,6 +514,11 @@
   resolved "https://registry.yarnpkg.com/@types/eslint-visitor-keys/-/eslint-visitor-keys-1.0.0.tgz#1ee30d79544ca84d68d4b3cdb0af4f205663dd2d"
   integrity sha512-OCutwjDZ4aFS6PB1UZ988C4YgwlBHJd6wCeQqaLdmadZ/7e+w79+hbMUFC1QXDNCmdyoRfAFdm0RypzwR+Qpag==
 
+"@types/estree@^0.0.44":
+  version "0.0.44"
+  resolved "https://registry.yarnpkg.com/@types/estree/-/estree-0.0.44.tgz#980cc5a29a3ef3bea6ff1f7d021047d7ea575e21"
+  integrity sha512-iaIVzr+w2ZJ5HkidlZ3EJM8VTZb2MJLCjw3V+505yVts0gRC4UMvjw0d1HPtGqI/HQC/KdsYtayfzl+AXY2R8g==
+
 "@types/graceful-fs@^4.1.2":
   version "4.1.3"
   resolved "https://registry.yarnpkg.com/@types/graceful-fs/-/graceful-fs-4.1.3.tgz#039af35fe26bec35003e8d86d2ee9c586354348f"
@@ -1992,6 +1997,11 @@ esprima@^4.0.0, esprima@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/esprima/-/esprima-4.0.1.tgz#13b04cdb3e6c5d19df91ab6987a8695619b0aa71"
   integrity sha512-eGuFFw7Upda+g4p+QHvnW0RyTX/SVeJBDM/gCtMARO0cLuT2HcEKnTPvhjV6aGeqrCB/sbNop0Kszm0jsaWU4A==
+
+espurify@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/espurify/-/espurify-2.0.1.tgz#c25b3bb613863daa142edcca052370a1a459f41d"
+  integrity sha512-7w/dUrReI/QbJFHRwfomTlkQOXaB1NuCrBRn5Y26HXn5gvh18/19AgLbayVrNxXQfkckvgrJloWyvZDuJ7dhEA==
 
 esquery@^1.2.0:
   version "1.3.1"

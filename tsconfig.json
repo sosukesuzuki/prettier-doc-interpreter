@@ -6,7 +6,7 @@
     "strict": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "declarationDir": "./dist",
-    "declaration": true
+    "declaration": true,
+    "declarationDir": "./dist"
   }
 }
