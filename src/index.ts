@@ -1,6 +1,6 @@
 import { parse } from "acorn";
 import type ESTree from "estree";
-import { doc, __debug, Doc } from "prettier";
+import { doc, __debug } from "prettier";
 
 const { builders } = doc;
 
