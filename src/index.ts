@@ -48,7 +48,12 @@ const DOC_BUILDER_VARS = [
   CURSOR,
 ];
 
-const VALID_NODE_TYPES = new Set(["Identifier", "CallExpression", "Literal"]);
+const VALID_NODE_TYPES = new Set([
+  "Identifier",
+  "CallExpression",
+  "Literal",
+  "ArrayExpression",
+]);
 function isValidDocNode(
   node: ESTree.Node
 ): node is ESTree.Identifier | ESTree.CallExpression | ESTree.Literal {
@@ -63,11 +68,14 @@ function isValidDocNode(
     return true;
   } else if (
     node.type === "Identifier" &&
-    DOC_BUILDER_VARS.includes(node.name)
+    (DOC_BUILDER_VARS.includes(node.name) ||
+      DOC_BUILDER_FUNCTIONS.includes(node.name))
   ) {
     return true;
   } else if (node.type === "Literal") {
     return true;
+  } else if (node.type === "ArrayExpression") {
+    return node.elements.every(isValidDocNode);
   }
   return false;
 }
@@ -89,7 +97,7 @@ export function evaluate(code: string): string {
   estraverse.traverse(mainExpression, {
     enter(node) {
       if (!isValidDocNode(node)) {
-        throw new SyntaxError(`The node is invalid: ${node.type}`);
+        throw new SyntaxError(`The node is invalid: ${JSON.stringify(node)}`);
       }
     },
   });
