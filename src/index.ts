@@ -144,7 +144,7 @@ export function evaluate(
   /* eslint-disable-next-line @typescript-eslint/no-explicit-any -- To use better AST type definitions */
   const ast = (parse(code, { locations: false }) as any) as ESTree.Program;
   if (ast.body.length > 1) {
-    throw new SyntaxError("There are tow root nodes.");
+    throw new SyntaxError("There are two root nodes.");
   }
 
   const rootNode = ast.body[0];
