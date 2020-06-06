@@ -16,7 +16,7 @@ const INDENT = "indent";
 const ALIGN = "align";
 const MARK_AS_ROOT = "markAsRoot";
 const DEDENT_TO_ROOT = "dedentToRoot";
-const DOC_BUILDER_FUNCTIONS = [
+const DOC_BUILDER_FUNCTIONS = new Set([
   GROUP,
   CONCAT,
   CONDITIONAL_GROUP,
@@ -28,7 +28,7 @@ const DOC_BUILDER_FUNCTIONS = [
   ALIGN,
   MARK_AS_ROOT,
   DEDENT_TO_ROOT,
-];
+]);
 
 /* doc builder value name */
 const BREAK_PARENT = "breakParent";
@@ -39,7 +39,7 @@ const LITERAL_LINE = "literalline";
 const LINE_SUFFIX_BOUNDARY = "lineSuffixBoundary";
 const TRIM = "trim";
 const CURSOR = "cursor";
-const DOC_BUILDER_VARS = [
+const DOC_BUILDER_VARS = new Set([
   BREAK_PARENT,
   LINE,
   SOFT_LINE,
@@ -48,7 +48,7 @@ const DOC_BUILDER_VARS = [
   LINE_SUFFIX_BOUNDARY,
   TRIM,
   CURSOR,
-];
+]);
 
 const VALID_NODE_TYPES = new Set([
   "Identifier",
@@ -69,13 +69,13 @@ function isValidDocNode(
   if (
     node.type === "CallExpression" &&
     node.callee.type === "Identifier" &&
-    DOC_BUILDER_FUNCTIONS.includes(node.callee.name)
+    DOC_BUILDER_FUNCTIONS.has(node.callee.name)
   ) {
     return true;
   } else if (
     node.type === "Identifier" &&
-    (DOC_BUILDER_VARS.includes(node.name) ||
-      DOC_BUILDER_FUNCTIONS.includes(node.name))
+    (DOC_BUILDER_VARS.has(node.name) ||
+      DOC_BUILDER_FUNCTIONS.has(node.name))
   ) {
     return true;
   } else if (

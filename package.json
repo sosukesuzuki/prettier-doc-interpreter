@@ -28,6 +28,8 @@
     "eslint-config-prettier": "^6.11.0",
     "jest": "^26.0.1",
     "rollup": "^2.13.1",
+    "rollup-plugin-node-builtins": "^2.1.2",
+    "rollup-plugin-node-globals": "^1.4.0",
     "rollup-plugin-terser": "^6.1.0",
     "rollup-plugin-typescript2": "^0.27.1",
     "ts-jest": "^26.1.0",
