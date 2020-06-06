@@ -1,6 +1,7 @@
 import { parse } from "acorn";
 import type ESTree from "estree";
 import { doc, __debug } from "prettier";
+import type { Doc } from 'prettier'
 
 const { builders } = doc;
 
@@ -49,6 +50,16 @@ const DOC_BUILDER_VARS = new Set([
   TRIM,
   CURSOR,
 ]);
+const DOC_BUILDER_VARS_MAP = new Map<string, Doc>([
+  [BREAK_PARENT, builders.breakParent],
+  [LINE, builders.line],
+  [SOFT_LINE, builders.softline],
+  [HARD_LINE, builders.hardline],
+  [LITERAL_LINE, builders.literalline],
+  [LINE_SUFFIX_BOUNDARY, builders.lineSuffixBoundary],
+  // [TRIM, builders.trim],
+  // [CURSOR, builders.cursor]
+]);
 
 const VALID_NODE_TYPES = new Set([
   "Identifier",
@@ -74,8 +85,7 @@ function isValidDocNode(
     return true;
   } else if (
     node.type === "Identifier" &&
-    (DOC_BUILDER_VARS.has(node.name) ||
-      DOC_BUILDER_FUNCTIONS.has(node.name))
+    (DOC_BUILDER_VARS.has(node.name) || DOC_BUILDER_FUNCTIONS.has(node.name))
   ) {
     return true;
   } else if (
@@ -107,12 +117,11 @@ function astToDoc(node: ESTree.Node): any {
       }
     }
     case "Identifier": {
-      switch (node.name) {
-        case LINE:
-          return builders.line;
-        default:
-          throw new Error(`Unknown doc var type: ${node.name}`);
+      const doc = DOC_BUILDER_VARS_MAP.get(node.name);
+      if (doc) {
+        return doc;
       }
+      throw new Error(`Unknown doc var type: ${node.name}`);
     }
     case "ArrayExpression": {
       return node.elements.map(astToDoc);
@@ -127,8 +136,11 @@ type Options = {
   printWidth: number;
   tabWidth: number;
   useTabs: boolean;
-}
-export function evaluate(code: string, options: Options = { printWidth: 80, tabWidth: 2, useTabs: false }): string {
+};
+export function evaluate(
+  code: string,
+  options: Options = { printWidth: 80, tabWidth: 2, useTabs: false }
+): string {
   /* eslint-disable-next-line @typescript-eslint/no-explicit-any -- To use better AST type definitions */
   const ast = (parse(code, { locations: false }) as any) as ESTree.Program;
   if (ast.body.length > 1) {
