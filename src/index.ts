@@ -1,9 +1,21 @@
 import { parse } from "acorn";
 import type ESTree from "estree";
 import { doc, __debug } from "prettier";
-import type { Doc } from 'prettier'
+import type { Doc } from "prettier";
 
 const { builders } = doc;
+
+class InvalidDocNodeError extends Error {
+  loc?: ESTree.SourceLocation | null;
+  constructor(message: string, loc?: null | ESTree.SourceLocation) {
+    if (loc) {
+      super(`${message} (${loc.start.line}:${loc.start.column})`);
+      this.loc = loc;
+    } else {
+      super(message);
+    }
+  }
+}
 
 /* doc builder function names */
 const GROUP = "group";
@@ -67,43 +79,68 @@ const VALID_NODE_TYPES = new Set([
   "Literal",
   "ArrayExpression",
 ]);
-function isValidDocNode(
+function validateNodeDoc(
   node: ESTree.Node
-): node is
+): asserts node is
   | ESTree.Identifier
   | ESTree.SimpleCallExpression
   | ESTree.Literal
   | ESTree.ArrayExpression {
   if (!VALID_NODE_TYPES.has(node.type)) {
-    return false;
+    throw new InvalidDocNodeError(
+      `${node.type} is invalid node type`,
+      node.loc
+    );
   }
-  if (
-    node.type === "CallExpression" &&
-    node.callee.type === "Identifier" &&
-    DOC_BUILDER_FUNCTIONS.has(node.callee.name)
-  ) {
-    return true;
-  } else if (
-    node.type === "Identifier" &&
-    (DOC_BUILDER_VARS.has(node.name) || DOC_BUILDER_FUNCTIONS.has(node.name))
-  ) {
-    return true;
-  } else if (
-    node.type === "Literal" &&
-    node.value &&
-    (typeof node.value === "string" || typeof node.value === "number")
-  ) {
-    return true;
-  } else if (node.type === "ArrayExpression") {
-    return node.elements.every(isValidDocNode);
+  switch (node.type) {
+    case "CallExpression": {
+      if (node.callee.type !== "Identifier") {
+        throw new InvalidDocNodeError(
+          `A CallExpression callee should be Identifier, received: ${node.callee.type}`,
+          node.loc
+        );
+      }
+      validateNodeDoc(node.callee);
+      break;
+    }
+    case "Identifier": {
+      if (
+        !DOC_BUILDER_FUNCTIONS.has(node.name) &&
+        !DOC_BUILDER_VARS.has(node.name)
+      ) {
+        throw new InvalidDocNodeError(
+          `${node.name} is unknown doc builder name`,
+          node.loc
+        );
+      }
+      break;
+    }
+    case "Literal": {
+      if (!node.value) {
+        throw new InvalidDocNodeError(
+          "An Literal value should exist",
+          node.loc
+        );
+      }
+      const typeofNodeValue = typeof node.value;
+      if (typeofNodeValue !== "string" && typeofNodeValue !== "number") {
+        throw new InvalidDocNodeError(
+          "An Literal should be string or number",
+          node.loc
+        );
+      }
+      break;
+    }
+    case "ArrayExpression":
+      for (const element of node.elements) {
+        validateNodeDoc(element);
+      }
+      break;
   }
-  return false;
 }
 
 function astToDoc(node: ESTree.Node): any {
-  if (!isValidDocNode(node)) {
-    throw new SyntaxError(`The node is invalid: ${JSON.stringify(node)}`);
-  }
+  validateNodeDoc(node);
   switch (node.type) {
     case "CallExpression": {
       const calleeName = (node.callee as ESTree.Identifier).name;
@@ -113,7 +150,10 @@ function astToDoc(node: ESTree.Node): any {
         case CONCAT:
           return builders.concat(astToDoc(node.arguments[0]));
         default:
-          throw new Error(`Unknown doc function type: ${calleeName}`);
+          throw new InvalidDocNodeError(
+            `Unknown doc function type: ${calleeName}`,
+            node.loc
+          );
       }
     }
     case "Identifier": {
@@ -121,7 +161,10 @@ function astToDoc(node: ESTree.Node): any {
       if (doc) {
         return doc;
       }
-      throw new Error(`Unknown doc var type: ${node.name}`);
+      throw new InvalidDocNodeError(
+        `Unknown doc var type: ${node.name}`,
+        node.loc
+      );
     }
     case "ArrayExpression": {
       return node.elements.map(astToDoc);
@@ -142,14 +185,17 @@ export function evaluate(
   options: Options = { printWidth: 80, tabWidth: 2, useTabs: false }
 ): string {
   /* eslint-disable-next-line @typescript-eslint/no-explicit-any -- To use better AST type definitions */
-  const ast = (parse(code, { locations: false }) as any) as ESTree.Program;
+  const ast = (parse(code, { locations: true }) as any) as ESTree.Program;
   if (ast.body.length > 1) {
-    throw new SyntaxError("There are two root nodes.");
+    throw new InvalidDocNodeError("There are two root nodes", ast.body[1].loc);
   }
 
   const rootNode = ast.body[0];
   if (rootNode.type !== "ExpressionStatement") {
-    throw new SyntaxError("The root node should be ExpressionStatement");
+    throw new InvalidDocNodeError(
+      "The root node should be ExpressionStatement",
+      rootNode.loc
+    );
   }
 
   const mainExpression = rootNode.expression;
