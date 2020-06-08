@@ -20,28 +20,15 @@ class InvalidDocNodeError extends Error {
 /* doc builder function names */
 const GROUP = "group";
 const CONCAT = "concat";
-const CONDITIONAL_GROUP = "conditionalGroup";
-const FILL = "fill";
-const IF_BREAK = "ifBreak";
-const JOIN = "join";
-const LINE_SUFFIX = "lineSuffix";
-const INDENT = "indent";
-const ALIGN = "align";
-const MARK_AS_ROOT = "markAsRoot";
-const DEDENT_TO_ROOT = "dedentToRoot";
-const DOC_BUILDER_FUNCTIONS = new Set([
-  GROUP,
-  CONCAT,
-  CONDITIONAL_GROUP,
-  FILL,
-  IF_BREAK,
-  JOIN,
-  LINE_SUFFIX,
-  INDENT,
-  ALIGN,
-  MARK_AS_ROOT,
-  DEDENT_TO_ROOT,
-]);
+// const CONDITIONAL_GROUP = "conditionalGroup";
+// const FILL = "fill";
+// const IF_BREAK = "ifBreak";
+// const JOIN = "join";
+// const LINE_SUFFIX = "lineSuffix";
+// const INDENT = "indent";
+// const ALIGN = "align";
+// const MARK_AS_ROOT = "markAsRoot";
+// const DEDENT_TO_ROOT = "dedentToRoot";
 
 /* doc builder value name */
 const BREAK_PARENT = "breakParent";
@@ -50,18 +37,8 @@ const SOFT_LINE = "softline";
 const HARD_LINE = "hardline";
 const LITERAL_LINE = "literalline";
 const LINE_SUFFIX_BOUNDARY = "lineSuffixBoundary";
-const TRIM = "trim";
-const CURSOR = "cursor";
-const DOC_BUILDER_VARS = new Set([
-  BREAK_PARENT,
-  LINE,
-  SOFT_LINE,
-  HARD_LINE,
-  LITERAL_LINE,
-  LINE_SUFFIX_BOUNDARY,
-  TRIM,
-  CURSOR,
-]);
+// const TRIM = "trim";
+// const CURSOR = "cursor";
 const DOC_BUILDER_VARS_MAP = new Map<string, Doc>([
   [BREAK_PARENT, builders.breakParent],
   [LINE, builders.line],
@@ -80,6 +57,7 @@ const VALID_NODE_TYPES = new Set([
   "ArrayExpression",
 ]);
 
+/* eslint-disable-next-line @typescript-eslint/no-explicit-any -- I'll fix this later... */
 function astToDoc(node: ESTree.Node): any {
   if (!VALID_NODE_TYPES.has(node.type)) {
     throw new InvalidDocNodeError(
@@ -129,10 +107,7 @@ function astToDoc(node: ESTree.Node): any {
         );
       }
       if (typeof node.value !== "string") {
-        throw new InvalidDocNodeError(
-          "An Literal should be string",
-          node.loc
-        );
+        throw new InvalidDocNodeError("An Literal should be string", node.loc);
       }
       return node.value;
     }

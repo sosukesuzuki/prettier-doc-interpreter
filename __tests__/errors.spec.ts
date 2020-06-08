@@ -25,13 +25,13 @@ describe("errors", () => {
     [
       "throws an error when an invalid doc builder value is called",
       `concat([foo])`,
-      "foo is unknown doc builder value name (1:8)"
+      "foo is unknown doc builder value name (1:8)",
     ],
     [
       "thrown an error when there is an literal that isn't string",
       `concat([3])`,
-      "An Literal should be string (1:8)"
-    ]
+      "An Literal should be string (1:8)",
+    ],
   ])("%s", (_, source, errorMessage) => {
     expect(() => {
       evaluate(source);
