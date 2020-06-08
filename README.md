@@ -11,3 +11,7 @@ const doc = `group(concat(["foo", hardline, "bar"]))`;
 const formatted = evaluate(doc);
 console.log(formatted); // foo\nbar
 ```
+
+## Todo
+
+- [ ] Works on browsers
