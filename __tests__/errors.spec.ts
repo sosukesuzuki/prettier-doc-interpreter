@@ -50,13 +50,13 @@ describe("errors", () => {
     [
       "throws an error when ifBreak has no two arguments",
       `ifBreak("foo")`,
-      "ifBreak requires two arguments (1:0)"
+      "ifBreak requires two arguments (1:0)",
     ],
     [
       "throws an error when join has no two arguments",
       `join("foo")`,
-      "join requires two arguments (1:0)"
-    ]
+      "join requires two arguments (1:0)",
+    ],
   ])("%s", (_, source, errorMessage) => {
     expect(() => {
       evaluate(source);

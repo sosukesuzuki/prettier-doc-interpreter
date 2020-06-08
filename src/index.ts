@@ -124,8 +124,8 @@ function astToDoc(node: ESTree.Node): Doc | Doc[] {
           assertArrayDocForBuilder(doc, {
             builderName: node.callee.name,
             shouldBeArray: false,
-            loc: node.arguments[0].loc
-          })
+            loc: node.arguments[0].loc,
+          });
           return builders[node.callee.name](doc);
         }
         case IF_BREAK: {
@@ -133,41 +133,41 @@ function astToDoc(node: ESTree.Node): Doc | Doc[] {
             throw new InvalidDocNodeError(
               `${node.callee.name} requires two arguments`,
               node.loc
-            )
+            );
           }
           const docLeft = astToDoc(node.arguments[0]);
           assertArrayDocForBuilder(docLeft, {
             builderName: node.callee.name,
             shouldBeArray: false,
-            loc: node.arguments[0].loc
-          })
+            loc: node.arguments[0].loc,
+          });
           const docRight = astToDoc(node.arguments[1]);
           assertArrayDocForBuilder(docRight, {
             builderName: node.callee.name,
             shouldBeArray: false,
-            loc: node.arguments[1].loc
-          })
+            loc: node.arguments[1].loc,
+          });
           return builders[node.callee.name](docLeft, docRight);
         }
         case JOIN: {
           if (node.arguments.length !== 2) {
             throw new InvalidDocNodeError(
               `${node.callee.name} requires two arguments`,
-              node.loc,
-            )
+              node.loc
+            );
           }
           const docLeft = astToDoc(node.arguments[0]);
           assertArrayDocForBuilder(docLeft, {
             builderName: node.callee.name,
             shouldBeArray: false,
-            loc: node.arguments[0].loc
-          })
+            loc: node.arguments[0].loc,
+          });
           const docRight = astToDoc(node.arguments[1]);
           assertArrayDocForBuilder(docRight, {
             builderName: node.callee.name,
             shouldBeArray: true,
-            loc: node.arguments[1].loc
-          })
+            loc: node.arguments[1].loc,
+          });
           return builders[node.callee.name](docLeft, docRight);
         }
         default:

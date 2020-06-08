@@ -13,40 +13,28 @@ describe("evaluate", () => {
       `conditionalGroup([concat(["foo", line]), "bar"])`,
       "foo ",
     ],
-    [
-      "prints docs with indent, dedent",
-      `indent(dedent("foo"))`,
-      "foo"
-    ],
+    ["prints docs with indent, dedent", `indent(dedent("foo"))`, "foo"],
     [
       "prints docs with lineSuffix",
       `concat(["foo", lineSuffix("bar"), hardline])`,
-      "foobar\n"
+      "foobar\n",
     ],
-    [
-      "prints docs with markAsRoot",
-      `markAsRoot("foo")`,
-      "foo",
-    ],
-    [
-      "prints docs with dedentToRoot",
-      `dedentToRoot("foo")`,
-      "foo"
-    ],
+    ["prints docs with markAsRoot", `markAsRoot("foo")`, "foo"],
+    ["prints docs with dedentToRoot", `dedentToRoot("foo")`, "foo"],
     [
       "pritns docs with join",
       `join("xxx", ["foo", "bar", "baz"])`,
-      "fooxxxbarxxxbaz"
+      "fooxxxbarxxxbaz",
     ],
     [
       "prints docs with ifBreak (no break)",
       `concat(["foo", ifBreak("bar", "baz")])`,
-      "foobar"
+      "foobar",
     ],
     [
       "prints docs with ifBreak (break)",
       `group(concat(["foo", ifBreak("bar", "baz"), breakParent]))`,
-      "foobaz"
+      "foobaz",
     ],
   ])("%s", (_, source, formatted) => {
     const result = evaluate(source);
