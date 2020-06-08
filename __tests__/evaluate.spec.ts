@@ -7,11 +7,7 @@ describe("evaluate", () => {
       `group(concat(["foo", line, "bar"]))`,
       "foo bar",
     ],
-    [
-      "prints docs with fill",
-      `fill(["foo", line, "bar", line])`,
-      "foo\nbar\n"
-    ]
+    ["prints docs with fill", `fill(["foo", line, "bar", line])`, "foo bar "],
   ])("%s", (_, source, formatted) => {
     const result = evaluate(source);
     expect(result).toBe(formatted);

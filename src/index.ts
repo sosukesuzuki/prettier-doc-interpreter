@@ -50,8 +50,7 @@ const DOC_BUILDER_VARS_MAP = new Map<string, Doc>([
   // [CURSOR, builders.cursor]
 ]);
 
-type Printable = string | Doc;
-function astToDoc(node: ESTree.Node): Printable | Printable[] {
+function astToDoc(node: ESTree.Node): Doc | Doc[] {
   switch (node.type) {
     case "CallExpression": {
       if (node.callee.type !== "Identifier") {
@@ -81,7 +80,7 @@ function astToDoc(node: ESTree.Node): Printable | Printable[] {
               node.arguments[0].loc
             );
           }
-          return builders.concat(doc);
+          return builders[node.callee.name](doc);
         }
         default:
           throw new InvalidDocNodeError(
