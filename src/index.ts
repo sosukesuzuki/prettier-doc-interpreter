@@ -50,8 +50,9 @@ const DOC_BUILDER_VARS_MAP = new Map<string, Doc>([
   // [CURSOR, builders.cursor]
 ]);
 
+type Printable = string | Doc;
 /* eslint-disable-next-line @typescript-eslint/no-explicit-any -- I'll fix this later... */
-function astToDoc(node: ESTree.Node): any {
+function astToDoc(node: ESTree.Node): Printable | Printable[] {
   switch (node.type) {
     case "CallExpression": {
       if (node.callee.type !== "Identifier") {
@@ -100,7 +101,15 @@ function astToDoc(node: ESTree.Node): any {
       );
     }
     case "ArrayExpression": {
-      return node.elements.map(astToDoc);
+      const docs = node.elements.map((element) => {
+        const doc = astToDoc(element);
+        if (Array.isArray(doc)) {
+          throw new InvalidDocNodeError("A node in an array shouldn't be array"),
+          element.loc
+        }
+        return doc;
+      });
+      return docs;
     }
     case "Literal": {
       if (!node.value) {
