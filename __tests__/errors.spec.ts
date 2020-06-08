@@ -13,15 +13,25 @@ describe("errors", () => {
       "The root node should be ExpressionStatement (1:0)",
     ],
     [
-      "throws an error when the invalide node is used",
+      "throws an error when an invalid node is used",
       `group(1 + 1)`,
       "BinaryExpression is invalid node type (1:6)",
     ],
     [
-      "throws an error when the invalid function is called",
+      "throws an error when an invalid doc builder function is called",
       `foo()`,
       "foo is unknown doc builder function name (1:0)",
     ],
+    [
+      "throws an error when an invalid doc builder value is called",
+      `concat([foo])`,
+      "foo is unknown doc builder value name (1:8)"
+    ],
+    [
+      "thrown an error when there is an literal that isn't string",
+      `concat([3])`,
+      "An Literal should be string (1:8)"
+    ]
   ])("%s", (_, source, errorMessage) => {
     expect(() => {
       evaluate(source);
