@@ -21,7 +21,7 @@ class InvalidDocNodeError extends Error {
 const GROUP = "group";
 const CONCAT = "concat";
 // const CONDITIONAL_GROUP = "conditionalGroup";
-// const FILL = "fill";
+const FILL = "fill";
 // const IF_BREAK = "ifBreak";
 // const JOIN = "join";
 // const LINE_SUFFIX = "lineSuffix";
@@ -72,13 +72,14 @@ function astToDoc(node: ESTree.Node): Printable | Printable[] {
           }
           return builders.group(doc);
         }
+        case FILL:
         case CONCAT: {
           const doc = astToDoc(node.arguments[0]);
           if (!Array.isArray(doc)) {
             throw new InvalidDocNodeError(
               `${node.callee.name} argument should be an array`,
-              node.arguments[0].loc,
-            )
+              node.arguments[0].loc
+            );
           }
           return builders.concat(doc);
         }
@@ -103,7 +104,10 @@ function astToDoc(node: ESTree.Node): Printable | Printable[] {
       const docs = node.elements.map((element) => {
         const doc = astToDoc(element);
         if (Array.isArray(doc)) {
-          throw new InvalidDocNodeError("A node in an array shouldn't be array", element.loc);
+          throw new InvalidDocNodeError(
+            "A node in an array shouldn't be array",
+            element.loc
+          );
         }
         return doc;
       });
@@ -111,10 +115,7 @@ function astToDoc(node: ESTree.Node): Printable | Printable[] {
     }
     case "Literal": {
       if (!node.value) {
-        throw new InvalidDocNodeError(
-          "A Literal value should exist",
-          node.loc
-        );
+        throw new InvalidDocNodeError("A Literal value should exist", node.loc);
       }
       if (typeof node.value !== "string") {
         throw new InvalidDocNodeError("A Literal should be string", node.loc);
@@ -122,7 +123,10 @@ function astToDoc(node: ESTree.Node): Printable | Printable[] {
       return node.value;
     }
     default: {
-      throw new InvalidDocNodeError(`${node.type} is invalid node type`, node.loc)
+      throw new InvalidDocNodeError(
+        `${node.type} is invalid node type`,
+        node.loc
+      );
     }
   }
 }

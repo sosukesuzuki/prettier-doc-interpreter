@@ -40,13 +40,13 @@ describe("errors", () => {
     [
       "throws an error when concat argument is a not-array",
       `concat("foo")`,
-      "concat argument should be an array"
+      "concat argument should be an array",
     ],
     [
       "throws an error when there is array in array",
       `concat(["foo", ["bar"]])`,
-      "A node in an array shouldn't be array (1:15)"
-    ]
+      "A node in an array shouldn't be array (1:15)",
+    ],
   ])("%s", (_, source, errorMessage) => {
     expect(() => {
       evaluate(source);
