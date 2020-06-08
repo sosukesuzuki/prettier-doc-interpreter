@@ -50,21 +50,8 @@ const DOC_BUILDER_VARS_MAP = new Map<string, Doc>([
   // [CURSOR, builders.cursor]
 ]);
 
-const VALID_NODE_TYPES = new Set([
-  "Identifier",
-  "CallExpression",
-  "Literal",
-  "ArrayExpression",
-]);
-
 /* eslint-disable-next-line @typescript-eslint/no-explicit-any -- I'll fix this later... */
 function astToDoc(node: ESTree.Node): any {
-  if (!VALID_NODE_TYPES.has(node.type)) {
-    throw new InvalidDocNodeError(
-      `${node.type} is invalid node type`,
-      node.loc
-    );
-  }
   switch (node.type) {
     case "CallExpression": {
       if (node.callee.type !== "Identifier") {
@@ -74,11 +61,27 @@ function astToDoc(node: ESTree.Node): any {
         );
       }
       switch (node.callee.name) {
-        case GROUP:
+        case GROUP: {
           // TODO: Support option
-          return builders.group(astToDoc(node.arguments[0]));
-        case CONCAT:
-          return builders.concat(astToDoc(node.arguments[0]));
+          const doc = astToDoc(node.arguments[0]);
+          if (Array.isArray(doc)) {
+            throw new InvalidDocNodeError(
+              `An argument for group shouldn't be an array`,
+              node.arguments[0].loc
+            );
+          }
+          return builders.group(doc);
+        }
+        case CONCAT: {
+          const doc = astToDoc(node.arguments[0]);
+          if (!Array.isArray(doc)) {
+            throw new InvalidDocNodeError(
+              `An argument for ${node.callee.name} should be an array`,
+              node.arguments[0].loc,
+            )
+          }
+          return builders.concat(doc);
+        }
         default:
           throw new InvalidDocNodeError(
             `${node.callee.name} is unknown doc builder function name`,
@@ -110,6 +113,9 @@ function astToDoc(node: ESTree.Node): any {
         throw new InvalidDocNodeError("An Literal should be string", node.loc);
       }
       return node.value;
+    }
+    default: {
+      throw new InvalidDocNodeError(`${node.type} is invalid node type`, node.loc)
     }
   }
 }

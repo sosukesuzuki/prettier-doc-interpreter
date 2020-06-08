@@ -28,7 +28,7 @@ describe("errors", () => {
       "foo is unknown doc builder value name (1:8)",
     ],
     [
-      "thrown an error when there is an literal that isn't string",
+      "throws an error when there is an literal that isn't string",
       `concat([3])`,
       "An Literal should be string (1:8)",
     ],
