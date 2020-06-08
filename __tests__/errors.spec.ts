@@ -20,7 +20,7 @@ describe("errors", () => {
     [
       "throws an error when the invalid function is called",
       `foo()`,
-      "foo is unknown doc builder name (1:0)",
+      "foo is unknown doc builder function name (1:0)",
     ],
   ])("%s", (_, source, errorMessage) => {
     expect(() => {

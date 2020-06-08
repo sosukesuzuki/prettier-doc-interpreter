@@ -79,13 +79,8 @@ const VALID_NODE_TYPES = new Set([
   "Literal",
   "ArrayExpression",
 ]);
-function validateNodeDoc(
-  node: ESTree.Node
-): asserts node is
-  | ESTree.Identifier
-  | ESTree.SimpleCallExpression
-  | ESTree.Literal
-  | ESTree.ArrayExpression {
+
+function astToDoc(node: ESTree.Node): any {
   if (!VALID_NODE_TYPES.has(node.type)) {
     throw new InvalidDocNodeError(
       `${node.type} is invalid node type`,
@@ -97,61 +92,18 @@ function validateNodeDoc(
       if (node.callee.type !== "Identifier") {
         throw new InvalidDocNodeError(
           `A CallExpression callee should be Identifier, received: ${node.callee.type}`,
-          node.loc
+          node.callee.loc
         );
       }
-      validateNodeDoc(node.callee);
-      break;
-    }
-    case "Identifier": {
-      if (
-        !DOC_BUILDER_FUNCTIONS.has(node.name) &&
-        !DOC_BUILDER_VARS.has(node.name)
-      ) {
-        throw new InvalidDocNodeError(
-          `${node.name} is unknown doc builder name`,
-          node.loc
-        );
-      }
-      break;
-    }
-    case "Literal": {
-      if (!node.value) {
-        throw new InvalidDocNodeError(
-          "An Literal value should exist",
-          node.loc
-        );
-      }
-      const typeofNodeValue = typeof node.value;
-      if (typeofNodeValue !== "string" && typeofNodeValue !== "number") {
-        throw new InvalidDocNodeError(
-          "An Literal should be string or number",
-          node.loc
-        );
-      }
-      break;
-    }
-    case "ArrayExpression":
-      for (const element of node.elements) {
-        validateNodeDoc(element);
-      }
-      break;
-  }
-}
-
-function astToDoc(node: ESTree.Node): any {
-  validateNodeDoc(node);
-  switch (node.type) {
-    case "CallExpression": {
-      const calleeName = (node.callee as ESTree.Identifier).name;
-      switch (calleeName) {
+      switch (node.callee.name) {
         case GROUP:
+          // TODO: Support option
           return builders.group(astToDoc(node.arguments[0]));
         case CONCAT:
           return builders.concat(astToDoc(node.arguments[0]));
         default:
           throw new InvalidDocNodeError(
-            `Unknown doc function type: ${calleeName}`,
+            `${node.callee.name} is unknown doc builder function name`,
             node.loc
           );
       }
@@ -162,7 +114,7 @@ function astToDoc(node: ESTree.Node): any {
         return doc;
       }
       throw new InvalidDocNodeError(
-        `Unknown doc var type: ${node.name}`,
+        `${node.name} is unknown doc builder value name`,
         node.loc
       );
     }
@@ -170,7 +122,19 @@ function astToDoc(node: ESTree.Node): any {
       return node.elements.map(astToDoc);
     }
     case "Literal": {
-      return node.value as string | number;
+      if (!node.value) {
+        throw new InvalidDocNodeError(
+          "An Literal value should exist",
+          node.loc
+        );
+      }
+      if (typeof node.value !== "string") {
+        throw new InvalidDocNodeError(
+          "An Literal should be string",
+          node.loc
+        );
+      }
+      return node.value;
     }
   }
 }
