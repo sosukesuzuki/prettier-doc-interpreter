@@ -50,6 +50,31 @@ const DOC_BUILDER_VARS_MAP = new Map<string, Doc>([
   // [CURSOR, builders.cursor]
 ]);
 
+function assertArrayDocForBuilder<T extends boolean>(
+  doc: Doc | Doc[],
+  {
+    builderName,
+    shouldBeArray,
+    loc,
+  }: {
+    builderName: string;
+    shouldBeArray: T;
+    loc?: null | ESTree.SourceLocation;
+  }
+): asserts doc is T extends true ? Doc[] : Doc {
+  if (shouldBeArray && !Array.isArray(doc)) {
+    throw new InvalidDocNodeError(
+      `${builderName} argument should be an array`,
+      loc
+    );
+  } else if (!shouldBeArray && Array.isArray(doc)) {
+    throw new InvalidDocNodeError(
+      `${builderName} argument shouldn't be an array`,
+      loc
+    );
+  }
+}
+
 function astToDoc(node: ESTree.Node): Doc | Doc[] {
   switch (node.type) {
     case "CallExpression": {
@@ -63,23 +88,21 @@ function astToDoc(node: ESTree.Node): Doc | Doc[] {
         case GROUP: {
           // TODO: Support option
           const doc = astToDoc(node.arguments[0]);
-          if (Array.isArray(doc)) {
-            throw new InvalidDocNodeError(
-              `group argument shouldn't be an array`,
-              node.arguments[0].loc
-            );
-          }
+          assertArrayDocForBuilder(doc, {
+            builderName: node.callee.name,
+            shouldBeArray: false,
+            loc: node.arguments[0].loc,
+          });
           return builders.group(doc);
         }
         case FILL:
         case CONCAT: {
           const doc = astToDoc(node.arguments[0]);
-          if (!Array.isArray(doc)) {
-            throw new InvalidDocNodeError(
-              `${node.callee.name} argument should be an array`,
-              node.arguments[0].loc
-            );
-          }
+          assertArrayDocForBuilder(doc, {
+            builderName: node.callee.name,
+            shouldBeArray: true,
+            loc: node.arguments[0].loc,
+          });
           return builders[node.callee.name](doc);
         }
         default:
