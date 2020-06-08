@@ -66,7 +66,7 @@ function astToDoc(node: ESTree.Node): Printable | Printable[] {
           const doc = astToDoc(node.arguments[0]);
           if (Array.isArray(doc)) {
             throw new InvalidDocNodeError(
-              `An argument for group shouldn't be an array`,
+              `group argument shouldn't be an array`,
               node.arguments[0].loc
             );
           }
@@ -76,7 +76,7 @@ function astToDoc(node: ESTree.Node): Printable | Printable[] {
           const doc = astToDoc(node.arguments[0]);
           if (!Array.isArray(doc)) {
             throw new InvalidDocNodeError(
-              `An argument for ${node.callee.name} should be an array`,
+              `${node.callee.name} argument should be an array`,
               node.arguments[0].loc,
             )
           }
@@ -103,8 +103,7 @@ function astToDoc(node: ESTree.Node): Printable | Printable[] {
       const docs = node.elements.map((element) => {
         const doc = astToDoc(element);
         if (Array.isArray(doc)) {
-          throw new InvalidDocNodeError("A node in an array shouldn't be array"),
-          element.loc
+          throw new InvalidDocNodeError("A node in an array shouldn't be array", element.loc);
         }
         return doc;
       });
@@ -113,12 +112,12 @@ function astToDoc(node: ESTree.Node): Printable | Printable[] {
     case "Literal": {
       if (!node.value) {
         throw new InvalidDocNodeError(
-          "An Literal value should exist",
+          "A Literal value should exist",
           node.loc
         );
       }
       if (typeof node.value !== "string") {
-        throw new InvalidDocNodeError("An Literal should be string", node.loc);
+        throw new InvalidDocNodeError("A Literal should be string", node.loc);
       }
       return node.value;
     }

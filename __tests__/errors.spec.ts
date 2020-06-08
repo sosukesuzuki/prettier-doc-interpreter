@@ -30,8 +30,23 @@ describe("errors", () => {
     [
       "throws an error when there is an literal that isn't string",
       `concat([3])`,
-      "An Literal should be string (1:8)",
+      "A Literal should be string (1:8)",
     ],
+    [
+      "throws an error when group argument is an array",
+      `group(["foo"])`,
+      "group argument shouldn't be an array",
+    ],
+    [
+      "throws an error when concat argument is a not-array",
+      `concat("foo")`,
+      "concat argument should be an array"
+    ],
+    [
+      "throws an error when there is array in array",
+      `concat(["foo", ["bar"]])`,
+      "A node in an array shouldn't be array (1:15)"
+    ]
   ])("%s", (_, source, errorMessage) => {
     expect(() => {
       evaluate(source);
