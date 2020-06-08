@@ -51,7 +51,6 @@ const DOC_BUILDER_VARS_MAP = new Map<string, Doc>([
 ]);
 
 type Printable = string | Doc;
-/* eslint-disable-next-line @typescript-eslint/no-explicit-any -- I'll fix this later... */
 function astToDoc(node: ESTree.Node): Printable | Printable[] {
   switch (node.type) {
     case "CallExpression": {
