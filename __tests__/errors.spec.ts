@@ -47,6 +47,16 @@ describe("errors", () => {
       `concat(["foo", ["bar"]])`,
       "A node in an array shouldn't be array (1:15)",
     ],
+    [
+      "throws an error when ifBreak has no two arguments",
+      `ifBreak("foo")`,
+      "ifBreak requires two arguments (1:0)"
+    ],
+    [
+      "throws an error when join has no two arguments",
+      `join("foo")`,
+      "join requires two arguments (1:0)"
+    ]
   ])("%s", (_, source, errorMessage) => {
     expect(() => {
       evaluate(source);
