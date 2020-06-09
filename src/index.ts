@@ -97,7 +97,7 @@ function astToDoc(node: ESTree.Node): Doc | Doc[] {
           });
           return builders.group(doc);
         }
-        case CONDITIONAL_GROUP:
+        case CONDITIONAL_GROUP: {
           // TODO: Support option
           const doc = astToDoc(node.arguments[0]);
           assertArrayDocForBuilder(doc, {
@@ -106,6 +106,7 @@ function astToDoc(node: ESTree.Node): Doc | Doc[] {
             loc: node.arguments[0].loc,
           });
           return builders.conditionalGroup(doc);
+        }
         case FILL:
         case CONCAT: {
           const doc = astToDoc(node.arguments[0]);
