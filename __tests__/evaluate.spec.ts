@@ -2,6 +2,7 @@ import { evaluate } from "../src";
 
 describe("evaluate", () => {
   test.each([
+    ["prints empty string", "", ""],
     [
       "prints docs with group, concat",
       `group(concat(["foo", line, "bar"]))`,

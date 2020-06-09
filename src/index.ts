@@ -229,6 +229,10 @@ export function evaluate(
   code: string,
   options: Options = { printWidth: 80, tabWidth: 2, useTabs: false }
 ): string {
+  if (code === "") {
+    return "";
+  }
+
   /* eslint-disable-next-line @typescript-eslint/no-explicit-any -- To use better AST type definitions */
   const ast = (parse(code, { locations: true }) as any) as ESTree.Program;
   if (ast.body.length > 1) {
