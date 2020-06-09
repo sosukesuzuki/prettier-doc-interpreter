@@ -1,5 +1,6 @@
 import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
+import replace from "@rollup/plugin-replace";
 import builtins from "rollup-plugin-node-builtins";
 import globals from "rollup-plugin-node-globals";
 import typescript from "rollup-plugin-typescript2";
@@ -16,6 +17,11 @@ export default {
     resolve({ preferBuiltins: false }),
     builtins(),
     globals(),
+    replace({
+      "process.env.PRETTIER_TARGET": JSON.stringify("universal"),
+      "process.env.NODE_ENV": JSON.stringify("production"),
+      "process.env.PRETTIER_DEBUG": "global.PRETTIER_DEBUG",
+    }),
     typescript({
       tsconfigOverride: {
         compilerOptions: {

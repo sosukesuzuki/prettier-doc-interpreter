@@ -1,9 +1,8 @@
 import { parse } from "acorn";
 import type ESTree from "estree";
-import { doc, __debug } from "prettier";
+import { __debug } from "prettier";
+import * as builders from './prettier/doc-builders';
 import type { Doc } from "prettier";
-
-const { builders } = doc;
 
 class InvalidDocNodeError extends Error {
   loc?: ESTree.SourceLocation | null;

@@ -19,6 +19,7 @@
   "devDependencies": {
     "@rollup/plugin-commonjs": "^13.0.0",
     "@rollup/plugin-node-resolve": "^8.0.1",
+    "@rollup/plugin-replace": "^2.3.3",
     "@types/estraverse": "^0.0.6",
     "@types/estree": "^0.0.44",
     "@types/jest": "^25.2.3",
