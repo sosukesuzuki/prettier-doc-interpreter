@@ -6,6 +6,11 @@
   "author": "Sosuke Suzuki <aosukeke@gmail.com>",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "files": [
+    "dist/**/*",
+    "!src/**/*",
+    "!examples/**/*"
+  ],
   "scripts": {
     "build": "rollup --config",
     "format": "prettier --write .",
