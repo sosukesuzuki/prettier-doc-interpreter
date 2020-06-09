@@ -1,6 +1,6 @@
 {
   "name": "prettier-doc-interpreter",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "repository": "ssh://git@github.com/sosukesuzuki/prettier-doc-interpreter.git",
   "license": "MIT",
   "author": "Sosuke Suzuki <aosukeke@gmail.com>",
