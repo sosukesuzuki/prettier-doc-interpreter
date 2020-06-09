@@ -14,4 +14,4 @@ console.log(formatted); // foo\nbar
 
 ## Todo
 
-- [ ] Works on browsers
+- [x] Works on browsers

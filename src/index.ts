@@ -1,8 +1,10 @@
 import { parse } from "acorn";
 import type ESTree from "estree";
-import { __debug } from "prettier";
-import * as builders from './prettier/doc-builders';
+import { doc } from 'prettier/standalone';
 import type { Doc } from "prettier";
+
+const { printDocToString } = doc.printer;
+const { builders } = doc;
 
 class InvalidDocNodeError extends Error {
   loc?: ESTree.SourceLocation | null;
@@ -242,7 +244,7 @@ export function evaluate(
 
   const mainExpression = rootNode.expression;
   const doc = astToDoc(mainExpression);
-  const result = __debug.printDocToString(doc, { ...options, parser: "babel" });
+  const result = printDocToString(doc, { ...options, parser: "babel" });
 
   return result.formatted;
 }
