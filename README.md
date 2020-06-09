@@ -2,11 +2,11 @@
 
 **This is still experimental**
 
-**This has not been published to npm yet**
-
 ## Usage
 
 ```js
+import { evaluate } from "prettier-doc-interpreter";
+
 const doc = `group(concat(["foo", hardline, "bar"]))`;
 const formatted = evaluate(doc);
 console.log(formatted); // foo\nbar
