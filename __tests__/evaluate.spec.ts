@@ -37,6 +37,11 @@ describe("evaluate", () => {
       `group(concat(["foo", ifBreak("bar", "baz"), breakParent]))`,
       "foobaz",
     ],
+    [
+      "prints docs with zero args doc builder function",
+      `group()`,
+      ""
+    ]
   ])("%s", (_, source, formatted) => {
     const result = evaluate(source);
     expect(result).toBe(formatted);

@@ -77,7 +77,10 @@ function assertArrayDocForBuilder<T extends boolean>(
   }
 }
 
-function astToDoc(node: ESTree.Node): Doc | Doc[] {
+function astToDoc(node?: ESTree.Node): Doc | Doc[] {
+  if (!node) {
+    return "";
+  }
   switch (node.type) {
     case "CallExpression": {
       if (node.callee.type !== "Identifier") {
@@ -93,7 +96,7 @@ function astToDoc(node: ESTree.Node): Doc | Doc[] {
           assertArrayDocForBuilder(doc, {
             builderName: node.callee.name,
             shouldBeArray: false,
-            loc: node.arguments[0].loc,
+            loc: node.arguments[0]?.loc,
           });
           return builders.group(doc);
         }
@@ -103,7 +106,7 @@ function astToDoc(node: ESTree.Node): Doc | Doc[] {
           assertArrayDocForBuilder(doc, {
             builderName: node.callee.name,
             shouldBeArray: true,
-            loc: node.arguments[0].loc,
+            loc: node.arguments[0]?.loc,
           });
           return builders.conditionalGroup(doc);
         }
@@ -113,7 +116,7 @@ function astToDoc(node: ESTree.Node): Doc | Doc[] {
           assertArrayDocForBuilder(doc, {
             builderName: node.callee.name,
             shouldBeArray: true,
-            loc: node.arguments[0].loc,
+            loc: node.arguments[0]?.loc,
           });
           return builders[node.callee.name](doc);
         }
@@ -126,7 +129,7 @@ function astToDoc(node: ESTree.Node): Doc | Doc[] {
           assertArrayDocForBuilder(doc, {
             builderName: node.callee.name,
             shouldBeArray: false,
-            loc: node.arguments[0].loc,
+            loc: node.arguments[0]?.loc,
           });
           return builders[node.callee.name](doc);
         }
@@ -141,13 +144,13 @@ function astToDoc(node: ESTree.Node): Doc | Doc[] {
           assertArrayDocForBuilder(docLeft, {
             builderName: node.callee.name,
             shouldBeArray: false,
-            loc: node.arguments[0].loc,
+            loc: node.arguments[0]?.loc,
           });
           const docRight = astToDoc(node.arguments[1]);
           assertArrayDocForBuilder(docRight, {
             builderName: node.callee.name,
             shouldBeArray: false,
-            loc: node.arguments[1].loc,
+            loc: node.arguments[1]?.loc,
           });
           return builders[node.callee.name](docLeft, docRight);
         }
@@ -162,13 +165,13 @@ function astToDoc(node: ESTree.Node): Doc | Doc[] {
           assertArrayDocForBuilder(docLeft, {
             builderName: node.callee.name,
             shouldBeArray: false,
-            loc: node.arguments[0].loc,
+            loc: node.arguments[0]?.loc,
           });
           const docRight = astToDoc(node.arguments[1]);
           assertArrayDocForBuilder(docRight, {
             builderName: node.callee.name,
             shouldBeArray: true,
-            loc: node.arguments[1].loc,
+            loc: node.arguments[1]?.loc,
           });
           return builders[node.callee.name](docLeft, docRight);
         }
